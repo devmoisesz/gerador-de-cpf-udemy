@@ -1,4 +1,4 @@
-Section 8 - Udemy JavaScript and TypeScript
+Section 9 - Udemy JavaScript and TypeScript
 
 ---
 
