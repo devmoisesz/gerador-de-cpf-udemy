@@ -1,45 +1,54 @@
-// 705.484.450-52 070.987.720-03
-export default class ValidaCPF {
-  constructor(cpfEnviado) {
-    Object.defineProperty(this, 'cpfLimpo', {
-      writable: false,
-      enumerable: true,
-      configurable: false,
-      value: cpfEnviado.replace(/\D+/g, '')
-    });
-  }
-
-  éSequência() {
-    return this.cpfLimpo.charAt(0).repeat(11) === this.cpfLimpo;
-  }
-
-  geraNovoCpf() {
-    const cpfSemDigitos = this.cpfLimpo.slice(0, -2);
-    const digito1 = ValidaCPF.geraDigito(cpfSemDigitos);
-    const digito2 = ValidaCPF.geraDigito(cpfSemDigitos + digito1);
-    this.novoCPF = cpfSemDigitos + digito1 + digito2;
-  }
-
-  static geraDigito(cpfSemDigitos) {
-    let total = 0;
-    let reverso = cpfSemDigitos.length + 1;
-
-    for(let stringNumerica of cpfSemDigitos) {
-      total += reverso * Number(stringNumerica);
-      reverso--;
+export default class ValidateCpf{
+    constructor(cpfSent){
+        Object.defineProperty(this, 'cpfClean', {
+            writable: false,
+            enumerable: true,
+            configurable: false,
+            value: cpfSent.replace(/\D+/g, '') //Limpa o CPF
+        });
     }
 
-    const digito = 11 - (total % 11);
-    return digito <= 9 ? String(digito) : '0';
-  }
+    CheckRepeatedSequence(){
+        return this.cpfClean.charAt(0).repeat(this.cpfClean.length) === this.cpfClean;
+    }
 
-  valida() {
-    if(!this.cpfLimpo) return false;
-    if(typeof this.cpfLimpo !== 'string') return false;
-    if(this.cpfLimpo.length !== 11) return false;
-    if(this.éSequência()) return false;
-    this.geraNovoCpf();
+    CreatenewCpf(){
+        const cpfPartial = this.cpfClean.slice(0, -2);
+        const digit1 = ValidateCpf.createDigit(cpfPartial)
+        const digit2 = ValidateCpf.createDigit(cpfPartial + digit1)
+        this.newCPF = cpfPartial + digit1 + digit2
+    }
 
-    return this.novoCPF === this.cpfLimpo;
-  }
+    static createDigit(cpfPartial){
+        let total = 0;
+        let reverse = cpfPartial.length + 1
+
+        for(let stringNumber of cpfPartial){
+            total += reverse * Number(stringNumber);
+            reverse--;
+        }
+        
+        const digit = 11 - (total % 11)
+        return digit <= 9 ? digit: '0'
+    }
+
+    valid(){
+        if(!this.cpfClean) return false;
+        if(typeof this.cpfClean !== 'string') return false;
+        //se a quantidade de carcteres do cpf enviado 
+        // é diferente de 11 retorna falso
+        if(this.cpfClean.length !== 11) return false; 
+        if(this.CheckRepeatedSequence()) return false; //se for senquencia retorna falso
+        this.CreatenewCpf()
+
+        return this.newCPF === this.cpfClean;
+    }
+}
+
+const cpf = new ValidateCpf('123.456.789-09')
+if(cpf.valid()){
+  console.log('V')
+}
+else{
+  console.log('I')
 }
